@@ -19,14 +19,31 @@ export function ImageResult({ imageResult, action }: ImageResultProps) {
     }
   };
 
-  const handleDownload = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    const link = document.createElement('a');
-    link.href = imageResult!;
-    link.download = 'code-result.png';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  const handleDownload = () => {
+    if (!imageResult) return;
+    
+    // Fetch the image as a blob to ensure proper download
+    fetch(imageResult)
+      .then(response => response.blob())
+      .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'code-result.png';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      })
+      .catch(() => {
+        // Fallback: try direct download
+        const link = document.createElement('a');
+        link.href = imageResult;
+        link.download = 'code-result.png';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      });
   };
 
   return (
@@ -68,13 +85,13 @@ export function ImageResult({ imageResult, action }: ImageResultProps) {
               alt="Generated result"
               className="max-h-56 object-contain rounded-lg"
             />
-            <a
-              href={imageResult}
+            <button
+              type="button"
               onClick={handleDownload}
               className="px-4 py-2 bg-zinc-900 hover:bg-black text-white text-xs font-medium rounded-lg transition-all shadow-xs cursor-pointer"
             >
               Download Code
-            </a>
+            </button>
           </div>
         ) : (
           /* Render Scanned Text Data */
