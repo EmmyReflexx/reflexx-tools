@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { HiOutlineDocumentText, HiOutlinePhotograph, HiOutlineClipboardCopy } from "react-icons/hi";
 
 interface ImageResultProps {
@@ -8,10 +9,24 @@ interface ImageResultProps {
 }
 
 export function ImageResult({ imageResult, action }: ImageResultProps) {
+  const [copied, setCopied] = useState(false);
+
   const handleCopyText = () => {
     if (imageResult) {
       navigator.clipboard.writeText(imageResult);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
     }
+  };
+
+  const handleDownload = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    const link = document.createElement('a');
+    link.href = imageResult!;
+    link.download = 'code-result.png';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
@@ -26,10 +41,10 @@ export function ImageResult({ imageResult, action }: ImageResultProps) {
           <button
             type="button"
             onClick={handleCopyText}
-            className="flex items-center gap-1 text-xs text-zinc-600 hover:text-black font-medium transition-colors"
+            className="flex items-center gap-1 text-xs text-zinc-600 hover:text-black font-medium transition-colors cursor-pointer"
           >
             <HiOutlineClipboardCopy className="w-4 h-4" />
-            <span>Copy</span>
+            <span>{copied ? "Copied!" : "Copy"}</span>
           </button>
         )}
       </div>
@@ -55,8 +70,8 @@ export function ImageResult({ imageResult, action }: ImageResultProps) {
             />
             <a
               href={imageResult}
-              download="code-result.png"
-              className="px-4 py-2 bg-zinc-900 hover:bg-black text-white text-xs font-medium rounded-lg transition-all shadow-xs"
+              onClick={handleDownload}
+              className="px-4 py-2 bg-zinc-900 hover:bg-black text-white text-xs font-medium rounded-lg transition-all shadow-xs cursor-pointer"
             >
               Download Code
             </a>
