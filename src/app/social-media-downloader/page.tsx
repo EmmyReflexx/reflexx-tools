@@ -137,7 +137,7 @@ export default function SocialMediaDownloaderPage() {
         link = `/api/download?url=${encodeURIComponent(JSON.parse(downloadLink))}&quality=worst`;
         filename = `${videoData?.title || 'video'}-normal.mp4`;
       } else if (type === "mp3") {
-        link = videoData?.audio_link;
+        link = videoData?.audio_link || "";
         if (!link) {
           throw new Error('No audio available for this video');
         }
