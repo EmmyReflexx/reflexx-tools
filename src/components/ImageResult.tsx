@@ -21,29 +21,14 @@ export function ImageResult({ imageResult, action }: ImageResultProps) {
 
   const handleDownload = () => {
     if (!imageResult) return;
-    
-    // Fetch the image as a blob to ensure proper download
-    fetch(imageResult)
-      .then(response => response.blob())
-      .then(blob => {
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = 'code-result.png';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
-      })
-      .catch(() => {
-        // Fallback: try direct download
-        const link = document.createElement('a');
-        link.href = imageResult;
-        link.download = 'code-result.png';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      });
+
+    // Direct the browser to our /proxy-download route with the image URL as a parameter
+    const link = document.createElement('a');
+    link.href = `/proxy-download?url=${encodeURIComponent(imageResult)}`;
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
@@ -90,7 +75,7 @@ export function ImageResult({ imageResult, action }: ImageResultProps) {
               onClick={handleDownload}
               className="px-4 py-2 bg-zinc-900 hover:bg-black text-white text-xs font-medium rounded-lg transition-all shadow-xs cursor-pointer"
             >
-              Download Code
+              Download Image
             </button>
           </div>
         ) : (

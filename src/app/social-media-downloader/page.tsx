@@ -128,7 +128,7 @@ export default function SocialMediaDownloaderPage() {
 
     try {
       let link = ``;
-      let filename = 'download';
+      let filename = '';
 
       if (type === "best") {
         link = `/api/download?url=${encodeURIComponent(JSON.parse(downloadLink))}&quality=best`;

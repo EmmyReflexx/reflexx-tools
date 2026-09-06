@@ -280,6 +280,7 @@ export default function QrAndBarcodeToolPage() {
             onChange={(e) => {
               setAction(e.target.value as "generate" | "scan");
               setErrorMessage("");
+              setImageResult('')
             }}
             className="px-3 py-2 bg-white border border-zinc-300 rounded-xl text-sm font-medium text-zinc-800 shadow-xs focus:outline-none focus:ring-2 focus:ring-black cursor-pointer"
           >
